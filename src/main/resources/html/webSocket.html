@@ -23,6 +23,11 @@
                 div.innerHTML+="<br>"+event.data+"</br>";
             }
 
+            ws.onclose = function (event) {
+                alert("webSocket通道已经关闭连接 ！"+event.data);
+                //已经关闭连接
+            };
+
         }
 
         function  ws_send(){
