@@ -14,7 +14,7 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.internal.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import websocket.handler.NioWebSocketHandler;
+import websocket.handler.WebSocketHandler;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
@@ -63,7 +63,7 @@ public class WebServerSocket {
                     channels.pipeline().addLast("http-codec", new HttpServerCodec());//设置解码器
                     channels.pipeline().addLast("aggregator", new HttpObjectAggregator(65536));//聚合器，使用websocket会用到
                     channels.pipeline().addLast("http-chunked", new ChunkedWriteHandler());//用于大数据的分区传输
-                    channels.pipeline().addLast("handler", new NioWebSocketHandler(wsPath));//自定义的业务handler
+                    channels.pipeline().addLast("handler", new WebSocketHandler(wsPath));//自定义的业务handler
                 }
             });
             Channel channel = bootstrap.bind(host, port).sync().channel();

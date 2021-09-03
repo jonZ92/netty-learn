@@ -25,11 +25,11 @@ import static io.netty.handler.codec.http.HttpUtil.isKeepAlive;
  */
 
 
-public class NioWebSocketHandler extends SimpleChannelInboundHandler<Object> {
+public class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
     private String wsPath;
 
-    public NioWebSocketHandler(String wsPath){
+    public WebSocketHandler(String wsPath){
         this.wsPath=wsPath;
     }
 
