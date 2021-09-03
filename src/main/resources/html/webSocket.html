@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+    <title>MY WEBSOCKET .....</title>
+    <script type="text/javascript">
+        function  ws_init(){
+            var target="ws://127.0.0.1:8818/websocket";/* 对应你的服务端程序地址 */
+            if ('WebSocket' in window) {
+                ws = new WebSocket(target);
+            } else if ('MozWebSocket' in window) {
+                ws = new MozWebSocket(target);
+            } else {
+                alert('WebSocket is not supported by this browser.');
+                return;
+            }
+            ws.onopen=function(){
+                alert("webSocket通道建立成功！！！");
+            };
+
+            ws.onmessage =function (event){
+                var div=document.getElementById("getServer");
+                div.innerHTML+="<br>"+event.data+"</br>";
+            }
+
+        }
+
+        function  ws_send(){
+            var msg = document.getElementById("msg");
+            ws.send(msg.value);
+            msg.value="";
+
+        }
+
+        function ws_clean(){
+
+            if (document.getElementById("msg")!=null)
+            {
+                document.getElementById("msg").value=""
+            }
+
+        }
+
+    </script>
+</head>
+<body>
+
+<button style="height:40px;width:100px" onclick="ws_init();"  >建立连接</button>
+<hr/>
+<input  type="text" id="msg" style="height:200px;width:1000px"  />
+<button style="height:40px;width:100px"  onclick="ws_send();" >send</button>
+<button style="height:40px;width:100px"  onclick="ws_clean();" >clean</button>
+<div id="getServer"> </div>
+
+
+</body>
+</html>
