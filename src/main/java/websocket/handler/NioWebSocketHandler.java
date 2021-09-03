@@ -27,6 +27,12 @@ import static io.netty.handler.codec.http.HttpUtil.isKeepAlive;
 
 public class NioWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
+    private String wsPath;
+
+    public NioWebSocketHandler(String wsPath){
+        this.wsPath=wsPath;
+    }
+
     private final Logger log= LogManager.getLogger(this.getClass());
 
     private WebSocketServerHandshaker handshaker;
@@ -103,7 +109,7 @@ public class NioWebSocketHandler extends SimpleChannelInboundHandler<Object> {
             return;
         }
         WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
-                "ws://localhost:8081/websocket", null, false);
+                this.wsPath, null, false);
         handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
             WebSocketServerHandshakerFactory

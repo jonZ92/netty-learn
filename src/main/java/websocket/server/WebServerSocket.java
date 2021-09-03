@@ -37,11 +37,15 @@ public class WebServerSocket {
 
     private Integer port;
 
+    private String wsPath;
+
     public WebServerSocket(String host, Integer port) {
 
         this.host = StringUtil.isNullOrEmpty(host) ? "127.0.0.1" : host;
 
         this.port = StringUtil.isNullOrEmpty(String.valueOf(port)) ? 8800 : port;
+        //ws://localhost:8818/websocket
+        this.wsPath="ws://"+this.host+":"+this.port+"/websocket";
     }
 
     public void init() {
@@ -59,12 +63,12 @@ public class WebServerSocket {
                     channels.pipeline().addLast("http-codec", new HttpServerCodec());//设置解码器
                     channels.pipeline().addLast("aggregator", new HttpObjectAggregator(65536));//聚合器，使用websocket会用到
                     channels.pipeline().addLast("http-chunked", new ChunkedWriteHandler());//用于大数据的分区传输
-                    channels.pipeline().addLast("handler", new NioWebSocketHandler());//自定义的业务handler
+                    channels.pipeline().addLast("handler", new NioWebSocketHandler(wsPath));//自定义的业务handler
                 }
             });
             Channel channel = bootstrap.bind(host, port).sync().channel();
-            log.info("webSocket服务器启动成功 IP=>:{} 端口=>:{}", host,port);
-            log.info("webSocket服务器启动成功:{}", channel);
+            log.info("webSocket服务器启动成功 HOST=>:{},PORT=>:{}", host,port);
+            log.info("webSocket服务器地址:{}", wsPath);
             channel.closeFuture().sync();
 
 
