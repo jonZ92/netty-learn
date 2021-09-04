@@ -5,6 +5,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -17,7 +18,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import webSocket.handler.WebSocketHandler;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author jon 2021:09:03
@@ -48,16 +52,16 @@ public class WebServerSocket {
 
     public void init() {
 
-        NioEventLoopGroup boss = new NioEventLoopGroup();
-        NioEventLoopGroup work = new NioEventLoopGroup();
+        EventLoopGroup boss = new NioEventLoopGroup(1); //监听链接线程数量设为1
+        EventLoopGroup work = new NioEventLoopGroup();
         try {
             ServerBootstrap boot = new ServerBootstrap();
             boot.group(boss, work);
             boot.channel(NioServerSocketChannel.class);
             boot.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
-                protected void initChannel(SocketChannel channels) throws Exception {
-                    ChannelPipeline pipeline = channels.pipeline();
+                protected void initChannel(SocketChannel ch) throws Exception {
+                    ChannelPipeline pipeline = ch.pipeline();
                     pipeline.addLast("logging", new LoggingHandler("INFO"));//设置log监听器，并且日志级别为info
                     pipeline.addLast("http-codec", new HttpServerCodec());//设置 编、解 码器
                     pipeline.addLast("aggregator", new HttpObjectAggregator(65536));//聚合器，使用websocket会用到
@@ -73,29 +77,19 @@ public class WebServerSocket {
 
             channel.closeFuture().sync();
 
-
         } catch (Exception e) {
             log.error("运行出错:{}", e.getMessage());
         } finally {
             boss.shutdownGracefully();
             work.shutdownGracefully();
-
             log.info("websocket服务器已关闭");
-
             try {
-
                 TimeUnit.SECONDS.sleep(10);//休眠10s
-
             } catch (InterruptedException e) {
-
                 log.error("当前线程休眠异常:{}", e.getMessage());
             }
-
             log.info("this thread is name  =>:{}", Thread.currentThread().getName());
-
-            executor.execute(() -> {
-                init();
-            });
+            executor.execute(() -> { init(); });
         }
     }
 }
