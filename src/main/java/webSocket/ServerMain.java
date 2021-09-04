@@ -1,8 +1,8 @@
-package websocket;
+package webSocket;
 
 
 
-import websocket.server.WebServerSocket;
+import webSocket.server.WebServerSocket;
 
 /**
  * @author jon 2021:09:03

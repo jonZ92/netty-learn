@@ -1,4 +1,4 @@
-package websocket.server;
+package webSocket.server;
 
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -14,7 +14,7 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.internal.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import websocket.handler.WebSocketHandler;
+import webSocket.handler.WebSocketHandler;
 
 import java.util.concurrent.*;
 
@@ -42,7 +42,7 @@ public class WebServerSocket {
 
         this.port = StringUtil.isNullOrEmpty(String.valueOf(port)) ? 8800 : port;
 
-        this.wsPath = "ws://" + this.host + ":" + this.port + "/websocket";
+        this.wsPath = "ws://" + this.host + ":" + this.port + "/webSocket";
     }
 
     public void init() {
@@ -86,10 +86,10 @@ public class WebServerSocket {
 
             } catch (InterruptedException e) {
 
-                log.error("休眠失败:{}", e.getMessage());
+                log.error("当前线程休眠异常:{}", e.getMessage());
             }
 
-            log.info("this thread is =>:{}", Thread.currentThread().getName());
+            log.info("this thread is name  =>:{}", Thread.currentThread().getName());
 
             executor.execute(() -> {
                 init();

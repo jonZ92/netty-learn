@@ -1,4 +1,4 @@
-package websocket.channel;
+package webSocket.channel;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;

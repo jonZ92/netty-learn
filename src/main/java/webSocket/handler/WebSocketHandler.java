@@ -1,4 +1,4 @@
-package websocket.handler;
+package webSocket.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -14,7 +14,7 @@ import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import websocket.channel.ChannelSupervise;
+import webSocket.channel.ChannelSupervise;
 
 import java.util.Date;
 
@@ -102,7 +102,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
                                    FullHttpRequest req) {
         //要求Upgrade为websocket，过滤掉get/Post
         if (!req.decoderResult().isSuccess()
-                || (!"websocket".equals(req.headers().get("Upgrade")))) {
+                || (!"webSocket".equals(req.headers().get("Upgrade")))) {
             //若不是websocket方式，则创建BAD_REQUEST的req，返回给客户端
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(
                     HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));
