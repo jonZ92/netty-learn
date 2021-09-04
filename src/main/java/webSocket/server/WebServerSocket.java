@@ -4,6 +4,7 @@ package webSocket.server;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -50,20 +51,21 @@ public class WebServerSocket {
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup work = new NioEventLoopGroup();
         try {
-            ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap.group(boss, work);
-            bootstrap.channel(NioServerSocketChannel.class);
-            bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
+            ServerBootstrap boot = new ServerBootstrap();
+            boot.group(boss, work);
+            boot.channel(NioServerSocketChannel.class);
+            boot.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel channels) throws Exception {
-                    channels.pipeline().addLast("logging", new LoggingHandler("INFO"));//设置log监听器，并且日志级别为info，方便观察运行流程
-                    channels.pipeline().addLast("http-codec", new HttpServerCodec());//设置 编、解 码器
-                    channels.pipeline().addLast("aggregator", new HttpObjectAggregator(65536));//聚合器，使用websocket会用到
-                    channels.pipeline().addLast("http-chunked", new ChunkedWriteHandler());//用于大数据的分区传输
-                    channels.pipeline().addLast("handler", new WebSocketHandler(wsPath));//自定义的业务handler
+                    ChannelPipeline pipeline = channels.pipeline();
+                    pipeline.addLast("logging", new LoggingHandler("INFO"));//设置log监听器，并且日志级别为info
+                    pipeline.addLast("http-codec", new HttpServerCodec());//设置 编、解 码器
+                    pipeline.addLast("aggregator", new HttpObjectAggregator(65536));//聚合器，使用websocket会用到
+                    pipeline.addLast("http-chunked", new ChunkedWriteHandler());//用于大数据的分区传输
+                    pipeline.addLast("handler", new WebSocketHandler(wsPath));//自定义的业务handler
                 }
             });
-            Channel channel = bootstrap.bind(host, port).sync().channel();
+            Channel channel = boot.bind(host, port).sync().channel();
 
             log.info("webSocket服务器启动成功 HOST=>:{},PORT=>:{}", host, port);
 
