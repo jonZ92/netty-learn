@@ -87,9 +87,8 @@ public class TcpServerSocket {
                 log.error("当前线程休眠异常:{}", e.getMessage());
             }
             log.info("this thread is name  =>:{}", Thread.currentThread().getName());
-            executor.execute(() -> {
-                init();
-            });
+            executor.execute(() -> {init(); });
+
         }
     }
 }
