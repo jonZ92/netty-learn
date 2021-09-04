@@ -102,7 +102,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<Object> {
                                    FullHttpRequest req) {
         //要求Upgrade为websocket，过滤掉get/Post
         if (!req.decoderResult().isSuccess()
-                || (!"webSocket".equals(req.headers().get("Upgrade")))) {
+                || (!"websocket".equals(req.headers().get("Upgrade")))) {
             //若不是websocket方式，则创建BAD_REQUEST的req，返回给客户端
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(
                     HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));

@@ -11,7 +11,7 @@ import webSocket.server.WebServerSocket;
 
 public class ServerMain {
     public static void main(String[] args) {
-        WebServerSocket socket=new WebServerSocket(null,8818);
+        WebServerSocket socket=new WebServerSocket("192.168.247.129",8001);
         socket.init();
     }
 }
