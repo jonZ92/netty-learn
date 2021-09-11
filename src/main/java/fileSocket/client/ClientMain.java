@@ -10,7 +10,7 @@ import fileSocket.client.socket.ClientSocket;
 public class ClientMain {
 
     public static void main(String[] args) {
-        ClientSocket socket = new ClientSocket("127.0.0.1", 8801);
+        ClientSocket socket = new ClientSocket("127.0.0.1", 8801,"");
         socket.connect();
     }
 }

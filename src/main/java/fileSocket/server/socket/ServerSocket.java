@@ -1,5 +1,14 @@
 package fileSocket.server.socket;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,14 +36,51 @@ public class ServerSocket {
     private final Integer port;
 
 
-    public ServerSocket(String host,Integer port){
-        this.host=host;
-        this.port=port;
+    public ServerSocket(String host, Integer port) {
+        this.host = host;
+        this.port = port;
     }
 
 
-    public void bind(){
+    public void bind() {
 
+        EventLoopGroup boss = new NioEventLoopGroup();
+        EventLoopGroup work = new NioEventLoopGroup();
+        try {
+            ServerBootstrap sb = new ServerBootstrap();
+            sb.group(boss, work)
+                    .channel(NioServerSocketChannel.class)
+                    .option(ChannelOption.SO_BACKLOG,1024)
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        protected void initChannel(SocketChannel ch) throws Exception {
+                            ChannelPipeline pipeline = ch.pipeline();
+
+                        }
+                    });
+
+            ChannelFuture sync = sb.bind(host, port).sync();
+
+            log.info("文件服务器启动成功 HOST=>:{},PORT=>:{}", host, port);
+
+            sync.channel().closeFuture().sync();
+
+        } catch (Exception e) {
+
+            log.error("运行出错:{}", e.getMessage());
+
+        } finally {
+            boss.shutdownGracefully();
+            work.shutdownGracefully();
+            log.info("服务器已关闭");
+            try {
+                TimeUnit.SECONDS.sleep(10);//休眠10s
+                log.info("this thread is name run socket =>:{}", Thread.currentThread().getName());
+                executor.execute(()-> bind());
+            }catch (Exception ex){
+                log.error("当前线程休眠异常:{}", ex.getMessage());
+            }
+        }
 
     }
 }
