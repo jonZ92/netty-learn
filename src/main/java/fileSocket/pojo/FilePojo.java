@@ -1,4 +1,4 @@
-package fileSocket.client.pojo;
+package fileSocket.pojo;
 
 import java.io.Serializable;
 
@@ -12,12 +12,13 @@ public class FilePojo implements Serializable {
 
     private String fileName;
 
-
-    private int starPos;
+    private long beging;
 
     private byte[] bytes;
 
-    private int endPos;
+    private long endl;
+
+    private String filePath;
 
 
     public String getFileName() {
@@ -28,12 +29,12 @@ public class FilePojo implements Serializable {
         this.fileName = fileName;
     }
 
-    public int getStarPos() {
-        return starPos;
+    public long getBeging() {
+        return beging;
     }
 
-    public void setStarPos(int starPos) {
-        this.starPos = starPos;
+    public void setBeging(long beging) {
+        this.beging = beging;
     }
 
     public byte[] getBytes() {
@@ -44,11 +45,19 @@ public class FilePojo implements Serializable {
         this.bytes = bytes;
     }
 
-    public int getEndPos() {
-        return endPos;
+    public long getEndl() {
+        return endl;
     }
 
-    public void setEndPos(int endPos) {
-        this.endPos = endPos;
+    public void setEndl(long endl) {
+        this.endl = endl;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

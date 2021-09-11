@@ -1,5 +1,8 @@
 package fileSocket.client.socket;
 
+import fileSocket.client.handler.ClientFaileHandler;
+
+import fileSocket.pojo.FilePojo;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -8,7 +11,10 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.sctp.nio.NioSctpChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,13 +41,14 @@ public class ClientSocket {
     // 端口
     private final Integer port;
 
-    private String filePath;
 
 
-    public ClientSocket(String host, Integer port,String filePath) {
+    private final FilePojo filePacket;
+
+    public ClientSocket(String host, Integer port, FilePojo filePacket) {
         this.host = host;
         this.port = port;
-        this.filePath=filePath;
+        this.filePacket=filePacket;
     }
 
     public void connect() {
@@ -49,13 +56,15 @@ public class ClientSocket {
         try {
             Bootstrap bt=new Bootstrap();
             bt.group(group)
-                    .channel(NioSctpChannel.class)
-                    .option(ChannelOption.SO_BACKLOG,1024)
+                    .channel(NioSocketChannel.class)
+                    .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<Channel>() {
                         @Override
                         protected void initChannel(Channel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
-
+                            pipeline.addLast("encoder",new ObjectEncoder());
+                            pipeline.addLast("decoder",new ObjectDecoder(ClassResolvers.weakCachingConcurrentResolver(null)));
+                            pipeline.addLast("clientHandler",new ClientFaileHandler(filePacket));
                         }
                     });
             ChannelFuture sync = bt.connect(host, port).sync();
