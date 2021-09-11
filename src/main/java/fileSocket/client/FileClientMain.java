@@ -9,14 +9,14 @@ import fileSocket.pojo.FilePojo;
  */
 
 
-public class ClientMain {
+public class FileClientMain {
 
     public static void main(String[] args) {
         FilePojo file=new FilePojo();
         file.setFilePath("C:\\Users\\Administrator\\Desktop\\");
         file.setBeging(0L);
-        file.setFileName("meilisearch.exe");
-        ClientSocket socket = new ClientSocket("127.0.0.1", 8801,file);
+        file.setFileName("netty_learn.jar");
+        ClientSocket socket = new ClientSocket("192.168.247.129", 7777,file);
         socket.connect();
     }
 }

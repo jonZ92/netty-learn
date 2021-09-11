@@ -21,8 +21,8 @@ public class ServerFileHandler extends ChannelInboundHandlerAdapter {
 
     private Long byteRead;
     private volatile Long start = 0L;
-    //    private String file_dir = "/home/jon/soft/";
-    private String file_dir = "D:\\JZRJ\\";
+    private String file_dir = "/home/jon/soft/";
+    //private String file_dir = "D:\\JZRJ\\";
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

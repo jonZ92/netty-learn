@@ -46,7 +46,7 @@ public class ClientFaileHandler extends ChannelInboundHandlerAdapter {
         }
         randomAccessFile = new RandomAccessFile(files, "r");
         randomAccessFile.seek(filePacket.getBeging());
-        lastLength = Integer.MAX_VALUE / 4;
+        lastLength = 0xa020;
         byte[] bytes = new byte[lastLength];
         if ((byteRead = randomAccessFile.read(bytes)) != -1) {
             filePacket.setEndl(byteRead);

@@ -7,9 +7,9 @@ import fileSocket.server.socket.ServerSocket;
  */
 
 
-public class ServerMain {
+public class FileServerMain {
     public static void main(String[] args) {
-        ServerSocket socket = new ServerSocket("127.0.0.1", 8801);
+        ServerSocket socket = new ServerSocket("192.168.247.129", 7777);
         socket.bind();
     }
 }
