@@ -10,7 +10,7 @@ import tcpSocket.server.TcpServerSocket;
 public class ServerMain {
 
     public static void main(String[] args) {
-        TcpServerSocket tcp=new TcpServerSocket(null,null);
+        TcpServerSocket tcp=new TcpServerSocket(null,8800);
         tcp.init();
     }
 }
