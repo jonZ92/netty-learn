@@ -85,7 +85,7 @@ public class ClientSocket {
                 TimeUnit.SECONDS.sleep(10);//休眠10s
                 log.info("this thread is name run socket =>:{}", Thread.currentThread().getName());
 
-                executor.execute(()->connect());
+                //executor.execute(()->connect());
             }catch (Exception ex){
 
             }

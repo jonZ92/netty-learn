@@ -42,10 +42,12 @@ public class ServerFileHandler extends ChannelInboundHandlerAdapter {
             randomAccessFile.seek(start);
             randomAccessFile.write(bytes);
             start = start + byteRead;
+            randomAccessFile.close();
             if (byteRead > 0) {
+                log.info("文件接收完成");
                 ctx.writeAndFlush(start);
-            } else {
-                randomAccessFile.close();
+            }else{
+                log.info("文件接收完毕");
             }
         }
     }
